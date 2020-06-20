@@ -118,6 +118,11 @@ export default {
               name: '通用组件',
               icon: 'smile',
               component: './publicComponentes/PublicComponentes',
+            },{
+              path: '/layoutComponents',
+              name: '布局',
+              icon: 'smile',
+              component: './layoutComponents/LayoutComponents',
             },
             {
               path: '/admin',
