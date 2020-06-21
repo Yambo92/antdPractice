@@ -128,6 +128,11 @@ export default {
               name: '导航',
               icon: 'smile',
               component: './navigator/NavigatorComponents',
+            },{
+              path: '/datas',
+              name: '数据录入',
+              icon: 'smile',
+              component: './datasInput/DatasInput',
             },
             {
               path: '/admin',
