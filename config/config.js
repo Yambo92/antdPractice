@@ -123,6 +123,11 @@ export default {
               name: '布局',
               icon: 'smile',
               component: './layoutComponents/LayoutComponents',
+            },{
+              path: '/navigator',
+              name: '导航',
+              icon: 'smile',
+              component: './navigator/NavigatorComponents',
             },
             {
               path: '/admin',
