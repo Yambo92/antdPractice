@@ -4,7 +4,7 @@ import { Complete,Complete2, Complete3 } from './components/AutoCompleteCom'
 import { CheckboxCom,CheckboxCom2, CheckboxCom3, CheckboxCom4, CheckboxCom5 } from './components/CheckBoxCom'
 import { CascaderCom, CascaderCom2, LasyOptions } from './components/CascaderCom'
 import { DatePickerCom, DateRange } from './components/DatePickerCom'
-import { WrappedHorizontalLoginForm, WrappedNormalLoginForm } from './components/FormCom' 
+import { WrappedHorizontalLoginForm, WrappedNormalLoginForm, WrappedRegistrationForm } from './components/FormCom' 
 const { TabPane } = Tabs;
 
 const DatasInput = () => {
@@ -51,6 +51,7 @@ const DatasInput = () => {
                 <Row>
                     <Col span={24}><WrappedHorizontalLoginForm /></Col>
                     <Col span={24}><WrappedNormalLoginForm /></Col>
+                    <Col span={24}><WrappedRegistrationForm /></Col>
                 </Row>
             </TabPane>
         </Tabs>
