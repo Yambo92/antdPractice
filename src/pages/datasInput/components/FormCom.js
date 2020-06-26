@@ -1,4 +1,4 @@
-import { Form, Icon, Input, Button, Checkbox, Tooltip, Cascader, Select, Row, Col, AutoComplete } from 'antd'
+import { Form, Icon, Input, Button, Checkbox, Tooltip, Cascader, Select, Row, Col, AutoComplete, Modal, Radio } from 'antd'
 import React from 'react'
 
 const { Option } = Select;
@@ -344,5 +344,254 @@ class RegistrationForm extends React.Component {
 
 const WrappedRegistrationForm = Form.create({name: 'register'})(RegistrationForm)
 
-export { WrappedHorizontalLoginForm, WrappedNormalLoginForm, WrappedRegistrationForm }
+
+class AdvancedSearchForm extends React.Component {
+    state = {
+        expand: false,
+    };
+    // to generate mock Form.Item
+    getFields() {
+        const count = this.state.expand ? 10 : 6;
+        const { getFieldDecorator } = this.props.form;
+        const children = [];
+        for(let i=0; i<10; i++) {
+            children.push(
+                <Col span={8} key={i} style={{ display: i< count ? 'block' : 'none' }}>
+                    <Form.Item label={`Field ${i}`}>
+                        {getFieldDecorator(`field-${i}`, {
+                            rules: [
+                                { required: true, message: 'Input something'}
+                            ]
+                        })(<Input placeholder="placeholder" />)}
+                    </Form.Item>
+                </Col>,
+            )
+        };
+        return children
+    }
+
+    handleSearch = e => {
+        e.preventDefault();
+        this.props.form.validateFields((err, values) => {
+            console.log('Received values of form: ', values)
+        })
+    };
+
+    handleReset = () => {
+        this.props.form.resetFields();
+    }
+
+    toggle = () => {
+        const { expand } = this.state;
+        this.setState({expand: !expand})
+    }
+
+    render() {
+        return (
+            <Form className="ant-advanced-search-form" onSubmit={this.handleSearch}>
+                <Row gutter={24}>{this.getFields()}</Row>
+                <Row>
+                    <Col span={24} style={{ textAlign: 'right'}}>
+                        <Button type="primary" htmlType="submit">
+                            Search
+                        </Button>
+                        <Button style={{ marginLeft: 8 }} onClick={this.handleReset}>
+                            Clear
+                        </Button>
+                        <a style={{ marginLeft: 8, fontSize: 12 }} onClick={this.toggle}>
+                            Collapse <Icon type={this.state.expand ? 'up' : 'down'} />
+                        </a>
+                    </Col>
+                </Row>
+            </Form>
+        )
+    }
+}
+const WrappedAdvancedSearchForm = Form.create({name: 'advanced_search'})(AdvancedSearchForm)
+
+
+const CollectionCreateForm = Form.create({name: 'form_in_modal'})(
+    class extends React.Component {
+        render() {
+            /* 经过 Form.create 包装的组件将会自带 this.props.form 属性， */
+            const { visible, onCancel, onCreate, form } = this.props;
+            const { getFieldDecorator } = form;
+            return (
+                <Modal
+                    visible={visible}
+                    title="Create a new collection"
+                    okText="Create"
+                    onCancel={onCancel}
+                    onOk={onCreate}
+                >
+                    <Form layout="vertical">
+                        <Form.Item label="Title">
+                            {getFieldDecorator('title', {
+                                rules: [{ required: true, message: 'Please input the title of collection'}]
+                            })(<Input />)}
+                        </Form.Item>
+                        <Form.Item label="Description">
+                            {getFieldDecorator('description')(<Input type="textarea" />)}
+                        </Form.Item>
+                        <Form.Item className="collection-create-form_last-form-item">
+                            {getFieldDecorator('modifier', {
+                                initialValue: 'public'
+                            })(
+                                <Radio.Group>
+                                    <Radio value="public">Public</Radio>
+                                    <Radio value="private">Private</Radio>
+                                </Radio.Group>
+                            )}
+                        </Form.Item>
+                    </Form>
+                </Modal>
+            )
+        }
+    }
+);
+
+class CollectionsPage extends React.Component {
+    state = {
+        visible: false,
+    };
+    showModal = () => {
+        this.setState({ visible: true });
+    };
+
+    handleCancel = () => {
+        this.setState({ visible: false })
+    };
+
+    handleCreate = () => {
+        const { form } = this.formRef.props;
+        form.validateFields((err, values) => {
+            if(err){
+                return;
+            }
+            console.log('Received values of form: ', values)
+            form.resetFields();
+            this.setState({visible: false})
+        })
+    };
+
+    saveFormRef = formRef => {
+        this.formRef = formRef
+    }
+
+    render() {
+        return (
+            <div>
+                <Button type="primary" onClick={this.showModal}>New Collection</Button>
+                <CollectionCreateForm 
+                 /* 子组件在经过 Form.create 之后如果要拿到 ref，可以使用 rc-form 提供的 wrappedComponentRef */
+                    wrappedComponentRef={this.saveFormRef}
+                    visible={this.state.visible}
+                    onCancel={this.handleCancel}
+                    onCreate={this.handleCreate}
+                />
+            </div>
+        )
+    }
+}
+
+let id = 0;
+
+class DynamicFieldSet extends React.Component {
+    
+    remove = k => {
+        const { form } = this.props;
+        const keys = form.getFieldValue('keys')
+        if(keys.length === 1) {
+            return
+        }
+        form.setFieldsValue({
+            keys: keys.filter(key => key !== k)
+        })
+    }
+
+    add = () => {
+        const { form } = this.props;
+        const keys = form.getFieldValue('keys')
+        const nextKeys = keys.concat(id++)
+        form.setFieldsValue({
+            keys: nextKeys,
+        })
+    }
+
+    handleSubmit = e => {
+        e.preventDefault();
+        this.props.form.validateFields((err, values) => {
+            if(!err) {
+                const { keys, names} = values;
+                console.log('received values of form: ', values)
+                console.log('Merged values: ', keys.map(key => names[key]))
+            }
+        })
+    }
+
+    render() {
+        const { getFieldDecorator, getFieldValue } = this.props.form;
+        const formItemLayout = {
+            labelCol: {
+                xs: { span: 24}, sm: {span: 4}
+            },
+            wrapperCol: {
+                xs: { span: 24}, sm: { span: 20}
+            }
+        };
+        const formItemLayoutWithOutLabel = {
+            wrapperCol: {
+                xs: {span: 24, offset: 0},
+                sm: {span: 20, offset: 4},
+            }
+        };
+        getFieldDecorator('keys', { initialValue: []});
+        const keys = getFieldValue('keys');
+        const formItems = keys.map((k, index) => (
+            <Form.Item
+                {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
+                label={index === 0 ? 'Passengers' : ''}
+                required={false}
+                key={k}
+            >
+                {getFieldDecorator(`names[${k}]`, {
+                    validateTrigger: ['onChange', 'onBlur'],
+                    rules: [
+                        {
+                            required: true,
+                            whitespace: true,
+                            message: '请输入'
+                        }
+                    ]
+                })(<Input placeholder="passenger name" style={{ width: '60%', marginRight: 8 }} />)}
+                {keys.length > 1 ? (
+                    <Icon 
+                        className="dynamic-delete-button"
+                        type="minus-circle-o"
+                        onClick={() => this.remove(k)}
+                    />
+                ) : null}
+            </Form.Item>
+        ));
+        return (
+            <Form onSubmit={this.handleSubmit}>
+                {formItems}
+                <Form.Item {...formItemLayoutWithOutLabel}>
+                    <Button type="dashed" onClick={this.add} style={{ width: '60%' }}>
+                        <Icon type="plus" /> Add Field
+                    </Button>
+                </Form.Item>
+                <Form.Item {...formItemLayoutWithOutLabel}>
+                    <Button type="primary" htmlType="submit">
+                        Submit
+                    </Button>
+                </Form.Item>
+            </Form>
+        )
+    }
+}
+
+const WrappedDynamicFieldSet = Form.create({ name: 'dynamic_form_item'})(DynamicFieldSet)
+
+export { WrappedHorizontalLoginForm, WrappedNormalLoginForm, WrappedRegistrationForm , WrappedAdvancedSearchForm, CollectionsPage,WrappedDynamicFieldSet}
 
