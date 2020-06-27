@@ -9,7 +9,7 @@ import { WrappedHorizontalLoginForm, WrappedNormalLoginForm, WrappedRegistration
      WrappedTimeRelatedForm, WrappedDemo, Demo2, RawForm 
     } from './components/FormCom' 
 import { CusTomFormCom, WrappedApp2,WrappedDynamicRule } from './components/FormCom2'
-
+import { SimpleInputNumber, InputCom } from './components/InputNumberCom'
 const { TabPane } = Tabs;
 
 const DatasInput = () => {
@@ -67,6 +67,13 @@ const DatasInput = () => {
                     <Col span={24}><CusTomFormCom /></Col>
                     <Col span={24}><WrappedApp2 /></Col>
                     <Col span={24}><WrappedDynamicRule /></Col>
+                </Row>
+            </TabPane>
+            <TabPane tab="InputNumber" key='6'>
+                <Row gutter={[0, 24]}>
+                    <Col span={24}><SimpleInputNumber /></Col>
+                    <Col span={24}><InputCom /></Col>
+                   
                 </Row>
             </TabPane>
         </Tabs>
