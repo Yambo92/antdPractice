@@ -14,6 +14,8 @@ import { MentionsCom } from './components/MentionsCom'
 import { RactCom, RaterCom2 } from './components/RateCom'
 import { App, App2, App3 } from './components/RadioCom'
 import {SimpleCom, UserRemoteSelect} from './components/SelectCom'
+import {App as TransferApp } from './components/Transfer'
+import {UploadCom } from './components/UploadCom'
 const { TabPane } = Tabs;
 
 const DatasInput = () => {
@@ -104,6 +106,16 @@ const DatasInput = () => {
                 <Row gutter={[0, 24]}>
                     <Col span={24}><SimpleCom /></Col>
                     <Col span={24}><UserRemoteSelect /></Col>
+                </Row>
+            </TabPane>
+            <TabPane tab="Transfer" key='11'>
+                <Row gutter={[0, 24]}>
+                    <Col span={24}><TransferApp /></Col>
+                </Row>
+            </TabPane>
+            <TabPane tab="UploadCom" key='12'>
+                <Row gutter={[0, 24]}>
+                    <Col span={24}><UploadCom /></Col>
                 </Row>
             </TabPane>
         </Tabs>

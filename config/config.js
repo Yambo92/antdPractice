@@ -133,6 +133,11 @@ export default {
               name: '数据录入',
               icon: 'smile',
               component: './datasInput/DatasInput',
+            },{
+              path: '/datasOverView',
+              name: '数据展示',
+              icon: 'smile',
+              component: './dataOverView',
             },
             {
               path: '/admin',
