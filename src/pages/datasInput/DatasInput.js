@@ -6,8 +6,10 @@ import { CascaderCom, CascaderCom2, LasyOptions } from './components/CascaderCom
 import { DatePickerCom, DateRange } from './components/DatePickerCom'
 import { WrappedHorizontalLoginForm, WrappedNormalLoginForm, WrappedRegistrationForm , WrappedAdvancedSearchForm,
      CollectionsPage, WrappedDynamicFieldSet,
-     WrappedTimeRelatedForm 
+     WrappedTimeRelatedForm, WrappedDemo, Demo2, RawForm 
     } from './components/FormCom' 
+import { CusTomFormCom, WrappedApp2,WrappedDynamicRule } from './components/FormCom2'
+
 const { TabPane } = Tabs;
 
 const DatasInput = () => {
@@ -59,6 +61,12 @@ const DatasInput = () => {
                     <Col span={24}><CollectionsPage /></Col>
                     <Col span={24}><WrappedDynamicFieldSet /></Col>
                     <Col span={24}><WrappedTimeRelatedForm /></Col>
+                    <Col span={24}><WrappedDemo /></Col>
+                    <Col span={24}><Demo2 /></Col>
+                    <Col span={24}><RawForm /></Col>
+                    <Col span={24}><CusTomFormCom /></Col>
+                    <Col span={24}><WrappedApp2 /></Col>
+                    <Col span={24}><WrappedDynamicRule /></Col>
                 </Row>
             </TabPane>
         </Tabs>

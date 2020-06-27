@@ -1,4 +1,4 @@
-import { Form, Icon, Input, Button, Checkbox, Tooltip, Cascader, Select, Row, Col, AutoComplete, Modal, Radio, DatePicker, TimePicker } from 'antd'
+import { Form, Icon, Input, Button, Checkbox, Tooltip, Cascader, Select, Row, Col, AutoComplete, Modal, Radio, DatePicker, TimePicker, InputNumber } from 'antd'
 import React from 'react'
 
 const { MonthPicker, RangePicker } = DatePicker;
@@ -672,5 +672,202 @@ class TimeRelatedForm extends React.Component {
 }
 const WrappedTimeRelatedForm = Form.create({ name: 'time_related_controls' })(TimeRelatedForm)
 
-export { WrappedHorizontalLoginForm, WrappedNormalLoginForm, WrappedRegistrationForm , WrappedAdvancedSearchForm, CollectionsPage,WrappedDynamicFieldSet, WrappedTimeRelatedForm}
+class PriceInput extends React.Component {
+    handleNumberChange = e => {
+        const number = parseInt(e.target.value || 0, 10)
+        if(isNaN(number)) {
+            return;
+        }
+        this.triggerChange({ number })
+    }
+
+    triggerChange = changedValue => {
+        const { onChange, value} = this.props;
+        if(onChange) {
+            onChange({
+                ...value,
+                ...changedValue
+            })
+        }
+    };
+
+    handleCurrencyChange = currency => {
+        this.triggerChange({ currency })
+    }
+
+    render() {
+        const { size, value } = this.props;
+        return (
+            <span>
+                <Input 
+                    type="text"
+                    size={size}
+                    value={value.number}
+                    onChange={this.handleNumberChange}
+                    style={{ width: '65%', marginRight: '3%' }}
+                />
+                <Select
+                    value={value.currency}
+                    size={size}
+                    style={{ width: '32%' }}
+                    onChange={this.handleCurrencyChange}
+                >
+                    <Option value='rmb'>RMB</Option>
+                    <Option value='dollar'>Dollar</Option>
+                </Select>
+            </span>
+        )
+    }
+}
+
+class PriceDemo extends React.Component {
+    handleSubmit = e => {
+        e.preventDefault();
+        this.props.form.validateFields((err, values) => {
+            if(!err) {
+                console.log('Received values of form: ', values)
+            }
+        })
+    }
+    checkPrice = (rule, value, callback) => {
+        if(value.number > 0) {
+            return callback();
+        }
+        callback('Price must greater than zero!')
+    }
+    render() {
+        const { getFieldDecorator } = this.props.form;
+        return (
+            <Form layout="inline" onSubmit={this.handleSubmit}>
+                <Form.Item label="Price">
+                    {getFieldDecorator('price', {
+                        initialValue: { number: 0, currency: 'rmb' },
+                        rules: [{ validator: this.checkPrice }],
+                    })(<PriceInput />)}
+                </Form.Item>
+                <Form.Item>
+                    <Button type="primary" htmlType="submit">
+                        Submit
+                    </Button>
+                </Form.Item>
+            </Form>
+        )
+    }
+}
+const WrappedDemo = Form.create({ name: 'customized_form_controls'})(PriceDemo)
+
+const CustomizedForm = Form.create({
+    name: 'global_state',
+    onFieldsChange(props, changedFields) {
+        props.onChange(changedFields)
+    },
+    mapPropsToFields(props) {
+        return {
+            username: Form.createFormField({
+                ...props.username,
+                value: props.username.value
+            })
+        }
+    },
+    onValuesChange(_, values) {
+        console.log(values)
+    }
+})(props => {
+    const { getFieldDecorator } = props.form;
+    return (
+        <Form layout="inline">
+            <Form.Item label="Username">
+                {getFieldDecorator('username', {
+                    rules: [{ required: true, message: 'Username is required'}]
+                })(<Input />)}
+            </Form.Item>
+        </Form>
+    )
+})
+
+class Demo2 extends React.Component {
+    state = {
+        fields: {
+            username: {
+                value: 'benjycui'
+            }
+        }
+    }
+    handleFormChange = changedFields => {
+        this.setState(({ fields }) => ({
+            fields: {...fields, ...changedFields}
+        }))
+    }
+    render() {
+        const { fields } = this.state;
+        return (
+            <div>
+                <CustomizedForm {...fields} onChange={this.handleFormChange} />
+                <pre className="language-bash">{JSON.stringify(fields, null, 2)}</pre>
+            </div>
+        )
+    }
+}
+
+function validatePrimeNumber(number) {
+    if(number === 11) {
+        return {
+            validateStatus: 'success',
+            errorMsg: null,
+        }
+    }
+    return {
+        validateStatus: 'error',
+        errorMsg: 'The Prime between 8 and 12 is 11'
+    }
+}
+
+class RawForm extends React.Component {
+    state = {
+        number: {
+            value: 11,
+        }
+    }
+    handleNumberChange = value => {
+        this.setState({
+            number: {
+                ...validatePrimeNumber(value),
+                value,
+            }
+        })
+    }
+    render() {
+        const formItemLayout = {
+            labelCol: { span: 7 },
+            wrapperCol: { span: 12 },
+        };
+        const { number } = this.state;
+        const tips = 
+            'A prime is a natural number greater than 1 '
+        return (
+            <Form>
+                <Form.Item
+                    {...formItemLayout}
+                    label="Prime between 8 & 12"
+                    validateStatus={number.validateStatus}
+                    help={number.errorMsg || tips}
+                >
+                    <InputNumber min={8} max={12} value={number.value} onChange={this.handleNumberChange} />
+                </Form.Item>
+            </Form>
+        )
+    }
+}
+
+export { WrappedHorizontalLoginForm, 
+    WrappedNormalLoginForm, 
+    WrappedRegistrationForm , 
+    WrappedAdvancedSearchForm, 
+    CollectionsPage,
+    WrappedDynamicFieldSet,
+     WrappedTimeRelatedForm,
+     WrappedDemo,
+     Demo2,
+     RawForm
+    }
 
