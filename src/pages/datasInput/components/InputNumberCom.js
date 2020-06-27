@@ -1,4 +1,4 @@
-import { InputNumber, Input, Select, Icon } from 'antd'
+import { InputNumber, Input, Select, Icon, Col, Row, DatePicker, AutoComplete, Cascader, Tooltip } from 'antd'
 
 const { Option } = Select;
 
@@ -49,3 +49,128 @@ export const InputCom = () => {
         </>
     )
 }
+
+const { Search } = Input;
+export const SearchCom = () => {
+    return (
+        <div>
+            <Search 
+                placeholder="input search text"
+                onSearch={value => console.log(value)}
+                style={{ width: 200 }}
+            />
+            <br />
+            <br />
+            <Search 
+                placeholder="input text" onSearch={value => console.log(value)}
+                enterButton
+            />
+            <br />
+            <br />
+            <Search 
+                placeholder="input search text"
+                enterButton="Search"
+                size="large"
+                onSearch={value => console.log(value)}
+            />
+        </div>
+    )
+}
+
+const InputGroup = Input.Group;
+
+const options = [
+    {
+      value: 'zhejiang',
+      label: 'Zhejiang',
+      children: [
+        {
+          value: 'hangzhou',
+          label: 'Hangzhou',
+          children: [
+            {
+              value: 'xihu',
+              label: 'West Lake',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      value: 'jiangsu',
+      label: 'Jiangsu',
+      children: [
+        {
+          value: 'nanjing',
+          label: 'Nanjing',
+          children: [
+            {
+              value: 'zhonghuamen',
+              label: 'Zhong Hua Men',
+            },
+          ],
+        },
+      ],
+    },
+  ];
+
+  class CompactDemo extends React.Component {
+      state = {
+          dataSource: [],
+      };
+      handleChange = value => {
+          this.setState({
+              dataSource: 
+                !value || value.indexOf('@') >= 0 ? [] : [`${value}@gmail.com`, `${value}@163.com`]
+          })
+      }
+      render() {
+          return (
+              <div>
+                  <InputGroup size="large">
+                      <Row gutter={8}>
+                          <Col span={5}>
+                            <Input defaultValue="0571" />
+                          </Col>
+                          <Col span={8}>
+                              <Input defaultValue="268888" />
+                          </Col>
+                      </Row>
+                  </InputGroup>
+              </div>
+          )
+      }
+  }
+
+  const { TextArea } = Input;
+  export class Demo3 extends React.Component {
+      state = {
+          value: ''
+      }
+      onChange = ({ target: { value }}) => {
+          this.setState({ value })
+      };
+      render() {
+          const { value } = this.state;
+          return (
+              <div>
+                  <TextArea placeholder="Autosize" autoSize />
+              </div>
+          )
+      }
+  }
+
+  export const InputCom5 = () => {
+      return (
+          <div>
+              <Input 
+                prefix={<Icon type="user" style={{ color: '#ccc'}} />}
+                suffix={
+                    <Tooltip title="Extra information">
+                        <Icon type="info-circle" style={{ color: '#333' }} />
+                    </Tooltip>
+                }
+              />
+          </div>
+      )
+  }

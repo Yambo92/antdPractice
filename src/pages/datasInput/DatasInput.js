@@ -9,7 +9,11 @@ import { WrappedHorizontalLoginForm, WrappedNormalLoginForm, WrappedRegistration
      WrappedTimeRelatedForm, WrappedDemo, Demo2, RawForm 
     } from './components/FormCom' 
 import { CusTomFormCom, WrappedApp2,WrappedDynamicRule } from './components/FormCom2'
-import { SimpleInputNumber, InputCom } from './components/InputNumberCom'
+import { SimpleInputNumber, InputCom, SearchCom, Demo3, InputCom5 } from './components/InputNumberCom'
+import { MentionsCom } from './components/MentionsCom'
+import { RactCom, RaterCom2 } from './components/RateCom'
+import { App, App2, App3 } from './components/RadioCom'
+import {SimpleCom, UserRemoteSelect} from './components/SelectCom'
 const { TabPane } = Tabs;
 
 const DatasInput = () => {
@@ -73,7 +77,33 @@ const DatasInput = () => {
                 <Row gutter={[0, 24]}>
                     <Col span={24}><SimpleInputNumber /></Col>
                     <Col span={24}><InputCom /></Col>
-                   
+                    <Col span={24}><SearchCom /></Col>
+                    <Col span={24}><Demo3 /></Col>
+                    <Col span={24}><InputCom5 /></Col>
+                </Row>
+            </TabPane>
+            <TabPane tab="Mention" key='7'>
+                <Row gutter={[0, 24]}>
+                    <Col span={24}><MentionsCom /></Col>
+                </Row>
+            </TabPane>
+            <TabPane tab="RactCom" key='8'>
+                <Row gutter={[0, 24]}>
+                    <Col span={24}><RactCom /></Col>
+                    <Col span={24}><RaterCom2 /></Col>
+                </Row>
+            </TabPane>
+            <TabPane tab="Radio" key='9'>
+                <Row gutter={[0, 24]}>
+                    <Col span={24}><App /></Col>
+                    <Col span={24}><App2 /></Col>
+                    <Col span={24}><App3 /></Col>
+                </Row>
+            </TabPane>
+            <TabPane tab="Select" key='10'>
+                <Row gutter={[0, 24]}>
+                    <Col span={24}><SimpleCom /></Col>
+                    <Col span={24}><UserRemoteSelect /></Col>
                 </Row>
             </TabPane>
         </Tabs>
